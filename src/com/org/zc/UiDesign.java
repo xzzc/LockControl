@@ -3,19 +3,21 @@ package com.org.zc;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
-import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-
-import org.w3c.dom.css.RGBColor;
 
 /**
  * 
@@ -24,23 +26,24 @@ import org.w3c.dom.css.RGBColor;
  */
 public class UiDesign {
 	// 控件的初始化
-	JFrame jFrame = new JFrame("LockControl");
-	Container container = jFrame.getContentPane();
-	JPanel jPanel1 = new JPanel();
-	JPanel jPanel2 = new JPanel();
-	JPanel jPanel3 = new JPanel();
+	private JFrame jFrame = new JFrame("LockControl");
+	private Container container = jFrame.getContentPane();
+	private JPanel jPanel1 = new JPanel();
+	private JPanel jPanel2 = new JPanel();
+	private JPanel jPanel3 = new JPanel();
 
-	JRadioButton jRadioButton1 = new JRadioButton("设置    时刻");
-	JRadioButton jRadioButton2 = new JRadioButton("设置倒计时");
-	JRadioButton jRadioButton3 = new JRadioButton("重启");
-	JRadioButton jRadioButton4 = new JRadioButton("关机");
+	private JRadioButton jRadioButton1 = new JRadioButton("设置    时刻");
+	private JRadioButton jRadioButton2 = new JRadioButton("设置倒计时");
+	private JRadioButton jRadioButton3 = new JRadioButton("重启");
+	private JRadioButton jRadioButton4 = new JRadioButton("关机");
 
-	JButton jButton = new JButton("启动任务");
-	JLabel jLabel = new JLabel("当前时间", JLabel.CENTER);
-	Font font = new Font("Serial", Font.BOLD, 30);
+	private JButton jButton = new JButton("启动任务");
+	private JLabel jLabel = new JLabel("", JLabel.CENTER);
 
-	ButtonGroup buttonGroup1 = new ButtonGroup();
-	ButtonGroup buttonGroup2 = new ButtonGroup();
+	private Font font = new Font("Serial", Font.BOLD, 30);
+
+	private ButtonGroup buttonGroup1 = new ButtonGroup();
+	private ButtonGroup buttonGroup2 = new ButtonGroup();
 
 	public UiDesign() {
 
@@ -114,5 +117,45 @@ public class UiDesign {
 		jFrame.setLocation(300, 300);
 		jFrame.setResizable(false);
 		jFrame.setVisible(true);
+		new Clock();
+		JOptionPane.showMessageDialog(container, "你好", "登录成功，欢迎光临！", 0);//弹窗
+		JOptionPane.showConfirmDialog(jPanel1, "123");
+	}
+
+	private class Clock implements ActionListener, Runnable {
+		private Date date = null;
+		private String mCurrentTime = null;
+		private SimpleDateFormat dateFormat = null;
+		private Thread thread = null;
+		private String[] strings = null;
+
+		public Clock() {
+			thread = new Thread(this);
+			thread.start();
+			
+		}
+
+		@Override
+		public void run() {
+			for (;;) {
+				date = new Date();
+				dateFormat = new SimpleDateFormat("HH:mm:ss");
+				mCurrentTime = dateFormat.format(date);
+				strings=mCurrentTime.split(":");
+//				System.out.println(strings[0] + strings[1] + " " + strings[2]);
+				jLabel.setText(mCurrentTime);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+
+		}
 	}
 }
